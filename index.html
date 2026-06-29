@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HomeBoard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+
+    <!-- 上段：時計 + 天気 -->
+    <div id="top-row">
+      <div id="clock-block">
+        <div id="clock">
+          <span id="clock-hm">--:--</span><span id="clock-s">:--</span>
+        </div>
+      </div>
+      <div id="weather-block">
+        <!-- 今日 -->
+        <div id="weather-today">
+          <div id="today-label" class="wday-label">今日</div>
+          <div id="weather-icon" class="wday-icon">--</div>
+          <div class="wday-desc">
+            <span id="weather-label">--</span>
+            <span id="weather-precip">--%</span>
+          </div>
+          <div id="weather-minmax" class="wday-minmax">↑--° ↓--°</div>
+        </div>
+        <!-- 明日 -->
+        <div id="weather-tomorrow">
+          <div id="tomorrow-label" class="wday-label">明日</div>
+          <div id="weather-icon-tmr" class="wday-icon">--</div>
+          <div class="wday-desc">
+            <span id="weather-label-tmr">--</span>
+            <span id="weather-precip-tmr" class="wday-precip">--%</span>
+          </div>
+          <div id="weather-minmax-tmr" class="wday-minmax">↑--° ↓--°</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 時間別天気 -->
+    <div id="hourly-block">
+      <div id="hourly-grid"></div>
+      <div id="weather-updated"></div>
+    </div>
+
+    <!-- 中段：カレンダー -->
+    <div id="calendar-block">
+      <div id="cal-header">
+        <span id="cal-year-month"></span>
+      </div>
+      <div id="cal-grid"></div>
+      <div id="cal-holiday-list"></div>
+    </div>
+
+    <!-- 下段：予定 -->
+    <div id="schedule-block">
+      <div id="schedule-allday">
+        <div class="schedule-section-title">終日</div>
+        <div id="allday-list"></div>
+      </div>
+      <div id="schedule-divider"></div>
+      <div id="schedule-timed">
+        <div class="schedule-section-title" id="timed-title">今日</div>
+        <div id="timed-list"></div>
+      </div>
+    </div>
+
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
