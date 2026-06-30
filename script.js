@@ -201,7 +201,11 @@ function renderSchedule(allday, timed) {
 async function buildSchedule() {
   renderSchedule([], []);  // 祝日のみ即時表示
   try {
-    const res  = await fetch(PROXY_URL);
+    const res = await fetch(PROXY_URL);
+    if (!res.ok) {
+      console.warn('TimeTree API エラー:', res.status, await res.text());
+      return;
+    }
     const data = await res.json();
     renderSchedule(data.allday || [], data.timed || []);
   } catch (e) {
