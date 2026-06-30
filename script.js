@@ -245,7 +245,7 @@ async function updateWeather() {
 
     const precip = currentPrecip(today.chanceOfRain);
     const max    = today.temperature.max?.celsius;
-    const min    = today.temperature.min?.celsius;
+    const min    = today.temperature.min?.celsius ?? data.forecasts[1]?.temperature.min?.celsius;
 
     document.getElementById('weather-icon').textContent   = telopToIcon(today.telop);
     document.getElementById('weather-label').textContent  = today.telop;
