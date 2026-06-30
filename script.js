@@ -266,7 +266,7 @@ async function updateWeather() {
       + `?latitude=${latitude}&longitude=${longitude}`
       + '&current=temperature_2m'
       + '&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max'
-      + '&timezone=Asia%2FTokyo&forecast_days=1';
+      + '&timezone=Asia%2FTokyo&forecast_days=1&models=jma_seamless';
 
     const res  = await fetch(url);
     const data = await res.json();
