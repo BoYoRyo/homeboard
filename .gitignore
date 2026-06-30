@@ -1,0 +1,5 @@
+# セッションキャッシュ（認証トークン）
+session_cache.json
+
+# Windows/WSL のゴミファイル
+*.Zone.Identifier

@@ -16,6 +16,7 @@
   --border: #c8c7c2;
   --radius: 6px;
   --font: -apple-system, 'Helvetica Neue', 'Hiragino Sans', sans-serif;
+  --px: 44px;
 }
 
 html, body {
@@ -30,119 +31,143 @@ html, body {
 #app {
   width: 100vw;
   height: 100vh;
-  padding: 50px 44px 32px;
   display: flex;
   flex-direction: column;
-  gap: 40px;
 }
 
 /* ===========================
-   上段：時計 + 天気
+   時計（中央揃え）
 =========================== */
 
-#top-row {
+#clock-block {
+  flex: 1;
+  min-height: 0;
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 40px;
+  align-items: center;
+  justify-content: center;
 }
 
 #clock {
   display: flex;
-  align-items: flex-end;
-  gap: 2px;
-  line-height: 1;
+  flex-direction: column;
+  align-items: center;
+  line-height: 0.88;
 }
 
-#clock-hm {
-  font-size: clamp(96px, 17vw, 148px);
-  font-weight: 200;
-  letter-spacing: -2px;
-  font-variant-numeric: tabular-nums;
-  color: var(--fg);
-}
-
-#clock-s {
-  font-size: clamp(48px, 8.5vw, 74px);
+#clock-h,
+#clock-m {
+  font-size: clamp(80px, 15vh, 260px);
   font-weight: 200;
   letter-spacing: -1px;
   font-variant-numeric: tabular-nums;
-  color: var(--muted);
-  padding-bottom: 4px;
-}
-
-#weather-block {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  margin-top: 8px;
-}
-
-#weather-today,
-#weather-tomorrow {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 5px;
-  padding: 0 10px;
-}
-
-#weather-today {
-  border-right: 1px solid var(--border);
-}
-
-.wday-label {
-  font-size: 11px;
-  color: var(--muted);
-  white-space: nowrap;
-}
-
-.wday-icon {
-  line-height: 1;
-  filter: grayscale(1);
-}
-
-.wday-icon { font-size: 30px; }
-
-.wday-desc {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
-  font-size: 13px;
   color: var(--fg);
-  white-space: nowrap;
-}
-
-#weather-precip {
-  color: var(--muted);
-  font-size: 12px;
-}
-
-.wday-minmax {
-  font-size: 12px;
-  color: var(--muted);
-}
-
-
-.wday-precip {
-  font-size: 12px;
-  color: var(--muted);
 }
 
 /* ===========================
-   カレンダー
+   日付（左揃え）
 =========================== */
 
-#calendar-block {
+#date-block {
+  flex: 0 0 auto;
+  text-align: center;
+}
+
+#date-display {
+  font-size: clamp(22px, 4vw, 44px);
+  font-weight: 300;
+  color: var(--fg);
+}
+
+/* ===========================
+   天気（左揃え、上に区切り線）
+=========================== */
+
+#weather-block {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(16px, 3vw, 32px);
+  padding: 10px var(--px) 10px;
+}
+
+#weather-left {
+  display: flex;
+  align-items: center;
+  gap: clamp(10px, 1.5vw, 18px);
+}
+
+#weather-icon {
+  font-size: clamp(28px, 4.5vw, 48px);
+  filter: grayscale(1);
+  line-height: 1;
+}
+
+#weather-desc {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+#weather-label {
+  font-size: clamp(14px, 2.2vw, 22px);
+  color: var(--fg);
+}
+
+#weather-precip {
+  font-size: clamp(12px, 1.8vw, 17px);
+  color: var(--muted);
+}
+
+#weather-vsep {
+  width: 1px;
+  height: 44px;
+  background: var(--border);
   flex-shrink: 0;
 }
 
+#weather-right {
+  display: flex;
+  align-items: center;
+  gap: clamp(8px, 1.2vw, 14px);
+}
+
+#weather-current-temp {
+  font-size: clamp(28px, 4.5vw, 52px);
+  font-weight: 200;
+  color: var(--fg);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -1px;
+}
+
+#weather-minmax-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: clamp(12px, 1.8vw, 17px);
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ===========================
+   月間カレンダー（左揃え、上に区切り線）
+=========================== */
+
+#calendar-block {
+  flex: 0 0 auto;
+  padding: 0 var(--px) 8px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
 #cal-header {
-  margin-bottom: 16px;
+  flex-shrink: 0;
+  margin-bottom: 8px;
 }
 
 #cal-year-month {
-  font-size: clamp(22px, 4vw, 32px);
+  font-size: clamp(16px, 2.8vw, 28px);
   font-weight: 400;
   color: var(--fg);
 }
@@ -150,14 +175,17 @@ html, body {
 #cal-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 4px 0;
+  grid-template-rows: auto repeat(6, clamp(28px, 4vh, 44px));
+  align-content: start;
+  min-height: 0;
+  gap: 1px 0;
 }
 
 .dow {
   text-align: center;
-  font-size: clamp(12px, 1.8vw, 15px);
+  font-size: clamp(11px, 1.8vw, 16px);
   color: var(--muted);
-  padding-bottom: 8px;
+  padding-bottom: 4px;
   font-weight: 400;
 }
 
@@ -165,20 +193,18 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-  aspect-ratio: 7/5;
-  font-size: clamp(14px, 2.2vw, 18px);
+  font-size: clamp(12px, 2vw, 18px);
   color: var(--fg);
-  cursor: default;
   border-radius: var(--radius);
+  min-height: 0;
+  margin: 4px;
 }
 
-/* 土・日・祝日：box-shadow で枠（隣接しても重ならない） */
 .day.weekend,
 .day.holiday {
   box-shadow: 0 0 0 1px var(--fg);
 }
 
-/* 今日：黒塗り・文字は背景色 */
 .day.today {
   background: var(--fg);
   color: var(--bg);
@@ -194,106 +220,66 @@ html, body {
   box-shadow: 0 0 0 1px var(--border);
 }
 
-/* ===========================
-   時間別天気
-=========================== */
-
-#hourly-grid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  grid-template-rows: auto auto auto auto;
-  grid-auto-flow: column;
-  row-gap: 6px;
-}
-
-.h-time {
-  font-size: clamp(11px, 1.6vw, 13px);
-  color: var(--muted);
-  text-align: center;
-}
-
-.h-icon {
-  font-size: clamp(18px, 2.8vw, 22px);
-  text-align: center;
-  line-height: 1.2;
-  filter: grayscale(1);
-}
-
-.h-temp {
-  font-size: clamp(12px, 1.8vw, 14px);
-  text-align: center;
-  font-variant-numeric: tabular-nums;
-  color: var(--fg);
-}
-
-.h-precip {
-  font-size: clamp(11px, 1.5vw, 12px);
-  text-align: center;
-  color: var(--muted);
-}
-
-#weather-updated {
-  font-size: 10px;
-  color: var(--border);
-  text-align: right;
-  margin-top: 3px;
-}
-
-/* 今月の祝日チップ */
 #cal-holiday-list {
-  margin-top: 10px;
+  flex-shrink: 0;
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
-  min-height: 0;
+  gap: 4px;
+  padding-top: 4px;
+  overflow: hidden;
+  max-height: 24px;
 }
 
 .holiday-chip {
-  font-size: clamp(10px, 1.5vw, 12px);
+  font-size: clamp(10px, 1.5vw, 13px);
   color: var(--muted);
   border: 1px solid var(--border);
   border-radius: 100px;
-  padding: 2px 8px;
+  padding: 1px 7px;
+  white-space: nowrap;
 }
 
 /* ===========================
-   予定エリア
+   予定（左揃え、上に区切り線）
 =========================== */
 
 #schedule-block {
-  flex: 1;
+  flex: 0 0 auto;
   display: flex;
-  gap: 0;
   border-top: 1px solid var(--border);
-  padding-top: 20px;
+  padding: 16px var(--px) 28px;
+  gap: 0;
   overflow: hidden;
 }
 
-#schedule-allday {
+#allday-list {
   flex: 1;
-  padding-right: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  overflow: hidden;
+  padding-right: 16px;
 }
 
 #schedule-divider {
   width: 1px;
   background: var(--border);
-  margin: 0 24px;
+  margin: 0 20px;
   flex-shrink: 0;
 }
 
-#schedule-timed {
+#timed-list {
   flex: 2;
-}
-
-.schedule-section-title {
-  font-size: clamp(13px, 2vw, 16px);
-  font-weight: 500;
-  color: var(--fg);
-  margin-bottom: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  overflow: hidden;
 }
 
 .allday-item {
-  font-size: clamp(13px, 2vw, 15px);
+  font-size: clamp(13px, 2.2vw, 18px);
   color: var(--fg);
   padding: 3px 0;
 }
@@ -305,9 +291,9 @@ html, body {
 
 .timed-item {
   display: flex;
-  gap: 16px;
-  padding: 4px 0;
-  font-size: clamp(13px, 2vw, 15px);
+  gap: clamp(16px, 2.5vw, 28px);
+  font-size: clamp(13px, 2.2vw, 18px);
+  padding: 3px 0;
   align-items: baseline;
 }
 
@@ -315,7 +301,7 @@ html, body {
   color: var(--muted);
   font-variant-numeric: tabular-nums;
   flex-shrink: 0;
-  width: 40px;
+  width: 44px;
 }
 
 .timed-title {
