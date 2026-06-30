@@ -56,7 +56,7 @@ html, body {
 
 #clock-h,
 #clock-m {
-  font-size: clamp(80px, 15vh, 260px);
+  font-size: clamp(80px, 25vh, 260px);
   font-weight: 200;
   letter-spacing: -1px;
   font-variant-numeric: tabular-nums;
@@ -73,7 +73,7 @@ html, body {
 }
 
 #date-display {
-  font-size: clamp(22px, 4vw, 44px);
+  font-size: clamp(22px, 8vw, 44px);
   font-weight: 300;
   color: var(--fg);
 }
@@ -161,7 +161,7 @@ html, body {
 #cal-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  grid-template-rows: auto repeat(6, clamp(28px, 4vh, 44px));
+  grid-template-rows: auto repeat(6, clamp(22px, 3vh, 36px));
   align-content: start;
   min-height: 0;
   gap: 1px 0;
@@ -179,11 +179,11 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: clamp(12px, 2vw, 18px);
+  font-size: clamp(12px, 3vw, 18px);
   color: var(--fg);
   border-radius: var(--radius);
   min-height: 0;
-  margin: 4px;
+  margin: 2px;
 }
 
 .day.weekend,
@@ -233,7 +233,7 @@ html, body {
   flex: 0 0 auto;
   display: flex;
   border-top: 1px solid var(--border);
-  padding: 16px var(--px) 28px;
+  padding: 5px var(--px) 28px;
   gap: 0;
   overflow: hidden;
 }
