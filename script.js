@@ -214,75 +214,44 @@ async function buildSchedule() {
 }
 
 // ===========================
-// 天気（Open-Meteo API）
-// 現在気温 + 今日の daily のみ取得
+// 天気（tsukumijima 天気予報 API・気象庁データ）
 // ===========================
 
-const WMO_WEATHER = {
-  0:  { label: '快晴',           icon: '☀︎' },
-  1:  { label: '晴れ',           icon: '☀︎' },
-  2:  { label: '晴れ時々曇り',   icon: '⛅︎' },
-  3:  { label: '曇り',           icon: '☁︎' },
-  45: { label: '霧',             icon: '☁︎' },
-  48: { label: '霧',             icon: '☁︎' },
-  51: { label: '小雨',           icon: '☂︎' },
-  53: { label: '小雨',           icon: '☂︎' },
-  55: { label: '小雨',           icon: '☂︎' },
-  61: { label: '雨',             icon: '☂︎' },
-  63: { label: '雨',             icon: '☂︎' },
-  65: { label: '大雨',           icon: '☂︎' },
-  71: { label: '雪',             icon: '❄︎' },
-  73: { label: '雪',             icon: '❄︎' },
-  75: { label: '大雪',           icon: '❄︎' },
-  77: { label: '霰',             icon: '❄︎' },
-  80: { label: 'にわか雨',       icon: '☂︎' },
-  81: { label: 'にわか雨',       icon: '☂︎' },
-  82: { label: '激しいにわか雨', icon: '☂︎' },
-  85: { label: 'にわか雪',       icon: '❄︎' },
-  86: { label: 'にわか雪',       icon: '❄︎' },
-  95: { label: '雷雨',           icon: '⚡︎' },
-  96: { label: '雷雨（雹）',     icon: '⚡︎' },
-  99: { label: '雷雨（雹）',     icon: '⚡︎' },
-};
+const WEATHER_CITY = '130010'; // 東京
 
-const DEFAULT_LOCATION = { latitude: 35.6762, longitude: 139.6503 };
+function telopToIcon(telop) {
+  if (telop.includes('雷')) return '⚡︎';
+  if (telop.includes('雪')) return '❄︎';
+  if (telop.includes('雨')) return '☂︎';
+  if (telop.includes('曇') && telop.includes('晴')) return '⛅︎';
+  if (telop.includes('曇')) return '☁︎';
+  if (telop.includes('晴')) return '☀︎';
+  return '？';
+}
 
-function getLocation() {
-  return new Promise(resolve => {
-    if (!navigator.geolocation) { resolve(DEFAULT_LOCATION); return; }
-    navigator.geolocation.getCurrentPosition(
-      pos => resolve({ latitude: pos.coords.latitude, longitude: pos.coords.longitude }),
-      ()  => resolve(DEFAULT_LOCATION),
-      { timeout: 5000 }
-    );
-  });
+function currentPrecip(chanceOfRain) {
+  const h = new Date().getHours();
+  if (h < 6)  return chanceOfRain.T00_06;
+  if (h < 12) return chanceOfRain.T06_12;
+  if (h < 18) return chanceOfRain.T12_18;
+  return chanceOfRain.T18_24;
 }
 
 async function updateWeather() {
   try {
-    const { latitude, longitude } = await getLocation();
-    // current: 現在気温のみ / daily: 今日1日分のみ
-    const url = 'https://api.open-meteo.com/v1/forecast'
-      + `?latitude=${latitude}&longitude=${longitude}`
-      + '&current=temperature_2m'
-      + '&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max'
-      + '&timezone=Asia%2FTokyo&forecast_days=1&models=jma_seamless';
-
-    const res  = await fetch(url);
+    const res  = await fetch(`https://weather.tsukumijima.net/api/forecast/city/${WEATHER_CITY}`);
     const data = await res.json();
+    const today = data.forecasts[0];
 
-    const w           = WMO_WEATHER[data.daily.weather_code[0]] ?? { label: '不明', icon: '？' };
-    const currentTemp = Math.round(data.current.temperature_2m);
-    const max         = Math.round(data.daily.temperature_2m_max[0]);
-    const min         = Math.round(data.daily.temperature_2m_min[0]);
-    const precip      = data.daily.precipitation_probability_max[0] ?? '--';
+    const precip = currentPrecip(today.chanceOfRain);
+    const max    = today.temperature.max?.celsius;
+    const min    = today.temperature.min?.celsius;
 
-    document.getElementById('weather-icon').textContent         = w.icon;
-    document.getElementById('weather-label').textContent        = w.label;
-    document.getElementById('weather-precip').textContent       = `${precip}%`;
-    document.getElementById('weather-current-temp').textContent = `${currentTemp}°`;
-    document.getElementById('weather-max').textContent          = `↑${max}°`;
-    document.getElementById('weather-min').textContent          = `↓${min}°`;
+    document.getElementById('weather-icon').textContent   = telopToIcon(today.telop);
+    document.getElementById('weather-label').textContent  = today.telop;
+    document.getElementById('weather-precip').textContent = precip !== '--%' ? precip : '--';
+    document.getElementById('weather-max').textContent    = max ? `↑${max}°` : '↑--°';
+    document.getElementById('weather-min').textContent    = min ? `↓${min}°` : '↓--°';
   } catch (e) {
     console.warn('天気データ取得失敗:', e);
   }
