@@ -20,8 +20,10 @@ import uuid
 import urllib.request
 import urllib.error
 from http.server import HTTPServer, BaseHTTPRequestHandler
-from datetime import datetime, date, timezone
+from datetime import datetime, date, timezone, timedelta
 from pathlib import Path
+
+JST = timezone(timedelta(hours=9))
 
 # ── 環境変数から読み込み（ファイルには保存しない）─────────
 
@@ -108,10 +110,10 @@ def get_session():
 # ── 予定取得 ──────────────────────────────────────────────
 
 def to_datetime(ts):
-    """タイムスタンプ（秒 or ミリ秒）を datetime に変換"""
+    """タイムスタンプ（秒 or ミリ秒）を JST datetime に変換"""
     if ts > 1e11:  # ミリ秒
         ts /= 1000
-    return datetime.fromtimestamp(ts, tz=timezone.utc).astimezone()
+    return datetime.fromtimestamp(ts, tz=timezone.utc).astimezone(JST)
 
 def fetch_today():
     """今日の予定を取得して {"allday": [...], "timed": [...]} で返す"""
@@ -138,7 +140,7 @@ def fetch_today():
     events = events_data.get('events', [])
     print(f'[proxy] 取得イベント数: {len(events)}')
 
-    today_str = date.today().isoformat()
+    today_str = datetime.now(tz=JST).date().isoformat()
     allday, timed = [], []
 
     for ev in events:

@@ -15,8 +15,10 @@ import uuid
 import urllib.request
 import urllib.error
 from http.server import BaseHTTPRequestHandler
-from datetime import datetime, date, timezone
+from datetime import datetime, date, timezone, timedelta
 from pathlib import Path
+
+JST = timezone(timedelta(hours=9))
 
 BASE        = 'https://timetreeapp.com/api/v1'
 UA          = 'web/2.1.0/en'
@@ -82,7 +84,7 @@ def get_session():
 def to_dt(ts):
     if ts > 1e11:
         ts /= 1000
-    return datetime.fromtimestamp(ts, tz=timezone.utc).astimezone()
+    return datetime.fromtimestamp(ts, tz=timezone.utc).astimezone(JST)
 
 def fetch_today():
     if not all([EMAIL, PASSWORD, CAL_NAME]):
@@ -102,7 +104,7 @@ def fetch_today():
     events_data, _ = api(f'/calendar/{cal_id}/events/sync?since=0', session_id=sid)
     events = events_data.get('events', [])
 
-    today_str = date.today().isoformat()
+    today_str = datetime.now(tz=JST).date().isoformat()
     allday, timed = [], []
     for ev in events:
         raw = ev.get('start_at', 0)
